@@ -5,7 +5,7 @@ The PHP Hooks Class is a fork of the WordPress filters hook system rolled in to 
 *  This class is heavily based on the WordPress plugin API and most (if not all) of the code comes from there.
 
 
-Head Over to [http://bainternet.github.com/PHP-Hooks/][3] For more info
+Head Over to [http://bainternet.github.io/PHP-Hooks/][3] For more info
 
 ----------
 
@@ -14,27 +14,30 @@ How to Use?
 
 Simple, Include the class file in your application bootstrap (setup/load/configuration or whatever you call it) and start hooking your filter and action hooks using the global `$hooks`. Ex:
 
-    <?php
-    include_once('php-hooks.php');
-    global $hooks;
-    $hooks->add_action('header_action','echo_this_in_header');
-    
-    function echo_this_in_header(){
-       echo 'this came from a hooked function';
-    }
-    ?>
+```PHP
+include_once('php-hooks.php');
+global $hooks;
+$hooks->add_action('header_action','echo_this_in_header');
+
+function echo_this_in_header(){
+   echo 'this came from a hooked function';
+}
+```
 
 then all that is left for you is to call the hooked function when you want anywhere in your aplication, EX:
 
-    <?php
-    echo '<div id="extra_header">';
-    global $hooks;
-    $hooks->do_action('header_action');
-    echo '</div>';
-    ?>
+```PHP
+echo '<div id="extra_header">';
+global $hooks;
+$hooks->do_action('header_action');
+echo '</div>';
+```
 
 
-and you output will be: `< div id="extra_header">this came from a hooked function</div>`
+and you output will be: 
+```HTML
+<div id="extra_header">this came from a hooked function</div>
+```
 
 Methods
 =======
@@ -145,3 +148,4 @@ Since this class is derived from the WordPress Plugin API so are the license and
   [1]: https://github.com/bainternet/PHP-Hooks/zipball/master
   [2]: https://github.com/bainternet/PHP-Hooks/tarball/master
   [3]: http://bainternet.github.com/PHP-Hooks/
+[![Analytics](https://ga-beacon.appspot.com/UA-50573135-5/PHP-Hooks/main)](https://github.com/bainternet/PHP-Hooks)

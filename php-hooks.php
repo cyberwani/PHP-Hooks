@@ -8,8 +8,8 @@
  * This class is heavily based on the WordPress plugin API and most (if not all) of the code comes from there.
  * 
  * 
- * @version 0.1.1
- * @copyright 2011 - 2012
+ * @version 0.1.3
+ * @copyright 2012 - 2014
  * @author Ohad Raz (email: admin@bainternet.info)
  * @link http://en.bainternet.info
  * 
@@ -445,6 +445,60 @@ if (!class_exists('Hooks')){
       return end( $this->current_filter );
     }
     /**
+     * Retrieve the name of the current action.
+     *
+     * @since 0.1.2
+     *
+     * @uses current_filter()
+     *
+     * @return string Hook name of the current action.
+     */
+    function current_action() {
+      return $this->current_filter();
+    }
+    
+    /**
+     * Retrieve the name of a filter currently being processed.
+     *
+     * The function current_filter() only returns the most recent filter or action
+     * being executed. did_action() returns true once the action is initially
+     * processed. This function allows detection for any filter currently being
+     * executed (despite not being the most recent filter to fire, in the case of
+     * hooks called from hook callbacks) to be verified.
+     *
+     * @since 0.1.2
+     *
+     * @see current_filter()
+     * @see did_action()
+     * @global array $wp_current_filter Current filter.
+     *
+     * @param null|string $filter Optional. Filter to check. Defaults to null, which
+     *                            checks if any filter is currently being run.
+     * @return bool Whether the filter is currently in the stack
+     */
+    function doing_filter( $filter = null ) {
+      if ( null === $filter ) {
+        return ! empty( $this->current_filter );
+      } 
+      return in_array( $filter, $this->current_filter );
+    }
+    
+    /**
+     * Retrieve the name of an action currently being processed.
+     *
+     * @since 0.1.2
+     *
+     * @uses doing_filter()
+     *
+     * @param string|null $action Optional. Action to check. Defaults to null, which checks
+     *                            if any action is currently being run.
+     * @return bool Whether the action is currently in the stack.
+     */
+    function doing_action( $action = null ) {
+      return $this->doing_filter( $action );
+    }
+    
+    /**
      * _filter_build_unique_id Build Unique ID for storage and retrieval.
      * @param string $tag Used in counting how many hooks were applied
      * @param callback $function Used for creating unique id
@@ -473,7 +527,7 @@ if (!class_exists('Hooks')){
           if ( !isset($function[0]->filter_id) ) {
             if ( false === $priority )
               return false;
-            $obj_idx .= isset($this->filters[$tag][$priority]) ? count((array)$$this->filters[$tag][$priority]) : $filter_id_count;
+            $obj_idx .= isset($this->filters[$tag][$priority]) ? count((array)$this->filters[$tag][$priority]) : $filter_id_count;
             $function[0]->filter_id = $filter_id_count;
             ++$filter_id_count;
           } else {
